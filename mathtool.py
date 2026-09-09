@@ -1,6 +1,7 @@
 from sys import argv
 from sys import exit
 from math import sqrt
+
 def help(): # выводим справку и завершаем программу
     print("Mathtool позволяет решать алгебраические уравнения вида  A·x² + B·x + C = 0, \n" \
     "Использование: \n " \
@@ -40,7 +41,7 @@ def prepareAndSolve(a,b,c): # здесь мы проверяем и обраба
         B = checkAndTransform(b) ## | сразу проверка трёх коэффициентов на легитимность, если что-то не понравится то вернёт error
         C = checkAndTransform(c) ## |
         if A != "error" and B != "error" and C != "error": # проверяем, являются ли полученные данные целыми числами
-            if A in range(-MAX_VALUE,MAX_VALUE + 1) and B in range(-MAX_VALUE,MAX_VALUE + 1) and C in range(-MAX_VALUE,MAX_VALUE + 1): #проверяем, входят ли все коэффициенты в допустимый диапазон
+            if abs(A) <= MAX_VALUE and abs(B) <= MAX_VALUE and abs(C) <= MAX_VALUE: #проверяем, входят ли все коэффициенты в допустимый диапазон
                 if A == 0 and B == 0:
                     exit("ОШИБКА! Коэффициенты A и B вместе не могут быть равны нулю!")
                 else: 
@@ -66,8 +67,8 @@ def main(): # обрабатываем полученные аргументы, 
                 # выкидываем пользователя если он вдруг написал что-то не то
                 exit("ОШИБКА! Неверный аргумент")
         case 8:
-            if argv[2] == "-a" and argv[4] == "-b" and argv[6] == "-c": # проверяем, то ли ввёл пользователь
-                prepareAndSolve(argv[3],argv[5],argv[7]) # отправляем на проверку полученные данные и решаем
+            if "-a" in argv and "-b" in argv and "-c" in argv: #проверяем все ли коэффициенты ввёл пользователь
+                prepareAndSolve(argv[argv.index("-a")+1],argv[argv.index("-b")+1],argv[argv.index("-c")+1]) # отправляем на проверку полученные данные и решаем
             else: exit("ОШИБКА! Неверные аргументы")
         case _:
             exit("ОШИБКА! Неверное количество аргументов")
