@@ -48,5 +48,5 @@ def prepareAndSolve(args): # здесь мы проверяем и обраба�
                     for i in range(2):
                         print(f"X{i+1} = {radicals[i]}") # выводим все корни по порядочку
                 return 0
-        else: raise ValueError("Коэффициенты должны быть по модулю не более 10_000!")
+        else: raise ValueError(f"Коэффициенты должны быть по модулю не более {MAX_VALUE}!")
     else:  raise ValueError("Неверно введены коэффициенты!")
