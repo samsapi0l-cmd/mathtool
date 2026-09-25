@@ -18,7 +18,7 @@ def setup_parse():
     integrate.add_argument("--to", type=float, required=True, help="плейсхолдер")
     integrate.add_argument("--func", choices=["ratio", "root"], type=str, required=True)
 
-    series = commands.add_parser("series",help="плейсхолдер")
+    series = commands.add_parser("series",help="плейсхолдер", allow_abbrev=False)
     series.add_argument("--func", choices=["sqplus", "third"],type=str, required=True)
     group = series.add_mutually_exclusive_group(required=True)
     group.add_argument("--terms", type=int, help="плейсхолдер")
