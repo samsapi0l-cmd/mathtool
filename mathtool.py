@@ -2,6 +2,7 @@ import sys
 from calc.equation import prepareAndSolve
 from calc.stats import stats
 from calc.series import series
+from calc.integration import integrate
 import cli
 
 def main(argv):
@@ -15,7 +16,8 @@ def main(argv):
     handlers = { # словарь с названиями команд и соответствующими функциями
         "solve" : prepareAndSolve,
         "stats" : stats,
-        "series" : series
+        "series" : series,
+        "integrate" : integrate
     }
     try:
         return handlers[args.command](args) #вызывает нужную команду, передавая аргументы, чтобы они могли посмотреть нужные параметры

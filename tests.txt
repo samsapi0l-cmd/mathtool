@@ -1,13 +1,222 @@
-| № | A | B | C | Ожидаемый результат |
-|---|------|------|------|------------------------|
-| 1 | - | - | - | вывод справки без указания аргументов |
-| 2 | - | - | - | вывод справки с указанием аргумента --help|
-| 3 | - | - | - | python mathtool.py xyz - сообщение об ошибке|
-| 4 | - | - | - | python mathtool.py solve -a 1 -b 2 — сообщение об ошибке |
-| 5 | abc | 2 | 3 | сообщение об ошибке |
-| 6 | 15000 | 2 | 3 | сообщение об ошибке |
-| 7 | 1 | -5 | 6 | квадратное; D = 1; x1 = 3.000; x2 = 2.000 |
-| 8 | 1 | -4 | 4 | квадратное; D = 0; x = 2.000 |
-| 9 | 1 | 2 | 5 | квадратное; D = -16; действительных корней нет |
-| 10 | 0 | 3 | -6 | линейное; x = 2.000 |
-| 11 | 0 | 0 | 5 | сообщение об ошибке |
+---------------------SOLVE
+
+1.  python mathtool.py
+    → справка без параметров; код 0
+
+2.  python mathtool.py --help
+    → справка; код 0
+
+3.  python mathtool.py xyz
+    → ошибка argparse (неизвестная команда); код 2
+
+4.  python mathtool.py solve -a 1 -b 2
+    → ОШИБКА: Не хватает одного из коэффициентов!; код 1
+
+5.  python mathtool.py solve -a abc -b 2 -c 3
+    → ошибка argparse (не целое число); код 2
+
+6.  python mathtool.py solve -a 15000 -b 2 -c 3
+    → ОШИБКА: Коэффициенты должны быть по модулю не более 10000!; код 1
+
+7.  python mathtool.py solve -a 1 -b -5 -c 6
+    → квадратное; D = 1; x1 = 3.000; x2 = 2.000; код 0
+
+8.  python mathtool.py solve -a 1 -b -4 -c 4
+    → квадратное; D = 0; x = 2.000; код 0
+
+9.  python mathtool.py solve -a 1 -b 2 -c 5
+    → квадратное; D = -16; действительных корней нет; код 0
+
+10. python mathtool.py solve -a 0 -b 3 -c -6
+    → линейное; x = 2.000; код 0
+
+11. python mathtool.py solve -a 0 -b 0 -c 5
+    → ОШИБКА: Коэффициенты A и B вместе не могут быть равны нулю!; код 1
+
+12. python mathtool.py solve -a 1 -b -3 -c 2
+    → квадратное; D = 1; x1 = 2.000; x2 = 1.000; код 0
+
+13. python mathtool.py solve -c 2 -a 1 -b -3
+    → то же, что в 12 (порядок параметров безразличен)
+
+14. python mathtool.py solve -a 10000 -b 0 -c 1
+    → квадратное; D = -40000; действительных корней нет; код 0 (граница диапазона)
+
+15. python mathtool.py solve -a 10001 -b 0 -c 1
+    → ОШИБКА: Коэффициенты должны быть по модулю не более 10000!; код 1
+
+16. python mathtool.py solve -x 1 -b -3 -c 2
+    → ошибка argparse (неизвестный параметр); код 2
+
+17. python mathtool.py solve -a
+    → ошибка argparse (параметр без значения); код 2
+
+18. python mathtool.py solve   (ввести: 1, -3, 2)
+    → то же, что в 12 (ввод с клавиатуры); код 0
+
+19. python mathtool.py solve   (ввести: 1, x, 2)
+    → ОШИБКА: Коэффициент не является целым числом!; код 1
+
+20. python mathtool.py solve -a 1 -a 2 -b 1 -c 1
+    → то же, что в 9 с A = 2 (повтор затирает значение); код 0
+
+
+-------------------------- STATS
+
+21. python mathtool.py stats --input numbers.txt
+    → Количество 3; сумма 10.000; ср. арифм. 3.333; сумма кв. 42.000; ср. кв. 3.742;
+      Дисперсия 2.889; СКО 1.700; станд. откл. 2.082; наименьшее 1.000; наибольшее 5.000;
+      положительных 3; отрицательных 0; код 0
+
+22. echo "4 1 5" | python mathtool.py stats
+    → то же, что в 21 (источник на результат не влияет)
+
+23. echo "7" | python mathtool.py stats
+    → Дисперсия 0.000; станд. откл. НЕ СУЩЕСТВУЕТ; код 0
+
+24. echo "" | python mathtool.py stats
+    → ОШИБКА: Полученный список пуст; код 1
+
+25. echo "1 2 abc" | python mathtool.py stats
+    → ОШИБКА: abc не является числом; код 1
+
+26. python mathtool.py stats --input nosuch.txt
+    → ОШИБКА: [Errno 2] No such file or directory: 'nosuch.txt'; код 1
+
+--- STATS (дополнения по ТЗ) ---
+
+27. echo "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20" | python mathtool.py stats
+    → Количество 20; код 0 (ровно предел)
+
+28. echo "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21" | python mathtool.py stats
+    → ОШИБКА: Количество элементов в списке больше 20; код 1
+
+29. echo "10000" | python mathtool.py stats
+    → Количество 1; код 0 (граница по модулю)
+
+30. echo "10001" | python mathtool.py stats
+    → ОШИБКА: Числа должны быть по модулю не более 10000!; код 1
+
+31. echo "inf 1 2" | python mathtool.py stats
+    → ОШИБКА: Числа должны быть конечными(не принимаются inf, nan, -inf); код 1
+
+32. echo "nan 1 2" | python mathtool.py stats
+    → ОШИБКА: Числа должны быть конечными(не принимаются inf, nan, -inf); код 1
+
+33. echo "-inf 1 2" | python mathtool.py stats
+    → ОШИБКА: Числа должны быть конечными(не принимаются inf, nan, -inf); код 1
+
+
+------------------SERIES
+
+34. python mathtool.py series --func sqplus --terms 1
+    → Слагаемых 1; сумма ряда 0.5000; код 0
+
+35. python mathtool.py series --func sqplus --terms 6
+    → Слагаемых 6; сумма ряда 0.3526; код 0
+
+36. python mathtool.py series --func sqplus --eps 0.0001
+    → Слагаемых 100; сумма ряда 0.3639; код 0
+
+37. python mathtool.py series --func third --eps 0.0001
+    → Слагаемых 3334; сумма ряда 0.2310; код 0
+
+38. python mathtool.py series --func sqplus --terms 10000
+    → Слагаемых 10000; сумма ряда 0.3640; код 0
+
+39. python mathtool.py series --func sqplus --terms 10001
+    → ОШИБКА: Количество слагаемых вне диапазона от 1 до 10000; код 1
+
+40. python mathtool.py series --func sqplus --eps 0.001
+    → ОШИБКА: Точность вне диапазона от 0 до 0.0001; код 1
+
+41. python mathtool.py series --func sqplus --terms 6 --eps 0.0001
+    → Сообщение argparse; код 2
+
+--- SERIES (дополнения по ТЗ) ---
+
+42. python mathtool.py series --func sqplus --terms 0
+    → ОШИБКА: Количество слагаемых вне диапазона от 1 до 10000; код 1
+
+43. python mathtool.py series --func sqplus --eps 0
+    → ОШИБКА: Точность вне диапазона от 0 до 0.0001; код 1
+
+44. python mathtool.py series --func third --eps 0.000001
+    → ОШИБКА: точность не достигнута; код 1
+
+45. python mathtool.py series --func sqplus
+    → Сообщение argparse: требуется --terms или --eps; код 2
+
+46. python mathtool.py series --func hui --terms 6
+    → Сообщение argparse (неизвестный ряд); код 2
+
+47. python mathtool.py series --help
+    → справка по команде series; код 0
+
+48. python mathtool.py series --func sqplus --te 6
+    → Сообщение argparse (сокращение --te не принимается); код 2
+
+
+------------------- INTEGRATE
+
+49. python mathtool.py integrate --func ratio --from 0 --to 20 --steps 10
+    → Значение интеграла 15.7335; код 0
+
+50. python mathtool.py integrate --func ratio --from 0 --to 20 --steps 1000
+    → Значение интеграла 16.9459; код 0
+
+51. python mathtool.py integrate --func ratio --from 0 --to 20 --steps 10000
+    → Значение интеграла 16.9545; код 0
+
+52. python mathtool.py integrate --func ratio --from 5 --to 10 --steps 1000
+    → Значение интеграла 4.3937; код 0
+
+53. python mathtool.py integrate --func root --from -4.9 --to 4.9 --steps 1000
+    → Значение интеграла 26.7976; код 0
+
+54. python mathtool.py integrate --func root --from -5 --to 5 --steps 100
+    → ОШИБКА: Предел вне промежутка функции; код 1
+
+55. python mathtool.py integrate --func ratio --from 4 --to 1 --steps 100
+    → ОШИБКА: Начальный предел должен быть меньше конечного; код 1
+
+56. python mathtool.py integrate --func ratio --from 0 --to 20 --steps 100001
+    → ОШИБКА: Количество шагов вне диапазона от 1 до 100000; код 1
+
+--- INTEGRATE (дополнения по ТЗ) ---
+
+57. python mathtool.py integrate --func ratio --from 5 --to 5 --steps 100
+    → ОШИБКА: Начальный предел должен быть меньше конечного; код 1
+
+58. python mathtool.py integrate --func ratio --from -1 --to 20 --steps 1000
+    → ОШИБКА: Предел вне промежутка функции; код 1
+
+59. python mathtool.py integrate --func ratio --from 0 --to 25 --steps 1000
+    → ОШИБКА: Предел вне промежутка функции; код 1
+
+60. python mathtool.py integrate --func root --from -4.99 --to 4.99 --steps 100
+    → Значение интеграла ~26.79; код 0 (границы не включены, но близко)
+
+61. python mathtool.py integrate --func root --from -5 --to 0 --steps 100
+    → ОШИБКА: Предел вне промежутка функции; код 1
+
+62. python mathtool.py integrate --func ratio --from 0 --to 20 --steps 0
+    → ОШИБКА: Количество шагов вне диапазона от 1 до 100000; код 1
+
+63. python mathtool.py integrate --func ratio --from 0 --to 20 --steps 1
+    → Значение интеграла ~10.0; код 0 (минимальное число шагов)
+
+64. python mathtool.py integrate --func ratio --from nan --to 20 --steps 100
+    → ОШИБКА: Пределы должны быть конечными числами; код 1
+
+65. python mathtool.py integrate --func ratio --from 0 --to inf --steps 100
+    → ОШИБКА: Пределы должны быть конечными числами; код 1
+
+66. python mathtool.py integrate --func hui --from 0 --to 20 --steps 100
+    → Сообщение argparse (неизвестная функция); код 2
+
+67. python mathtool.py integrate --func ratio --from 0 --to 20
+    → Сообщение argparse: требуется --steps; код 2
+
+68. python mathtool.py integrate --help
+    → справка по команде integrate; код 0

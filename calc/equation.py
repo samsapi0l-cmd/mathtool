@@ -30,11 +30,11 @@ def checkAndTransform(a): # проверяет является ли содер�
 
 def prepareAndSolve(args): # здесь мы проверяем и обрабатываем все данные и далее отправляем на решение в функцию solve
     MAX_VALUE = 10000 # диапазон, который могут принимать коэффициенты
-    if args.a == None and args.b == None and args.c == None:
+    if args.a is None and args.b is None and args.c is None:
         A,B,C = checkAndTransform(input("Введите A: ")),checkAndTransform(input("Введите B: ")),checkAndTransform(input("Введите C: ")) # принимаем ввод от пользователя
-    else:
+    elif args.a is not None and args.b is not None and args.c is not None:
         A,B,C = args.a,args.b,args.c # присваиваем переменным значения параметров
-
+    else: raise ValueError("Не хватает одного из коэффициентов!")
     if A != "error" and B != "error" and C != "error": # проверяем, являются ли полученные данные целыми числами
         if abs(A) <= MAX_VALUE and abs(B) <= MAX_VALUE and abs(C) <= MAX_VALUE: #проверяем, входят ли все коэффициенты в допустимый диапазон
             if A == 0 and B == 0:
@@ -44,6 +44,7 @@ def prepareAndSolve(args): # здесь мы проверяем и обраба�
                 radicals = results[2] # получаем список корней из solve
                 print(f"Вид уравнения: {results[0]}\nДискриминант: {results[1]}")
                 if len(radicals) == 0: print("Нет действительных корней")
+                elif len(radicals) == 1: print(f"X = {radicals[0]}")
                 else:
                     for i in range(2):
                         print(f"X{i+1} = {radicals[i]}") # выводим все корни по порядочку
