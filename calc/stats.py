@@ -1,11 +1,14 @@
 from sys import stdin
+from sys import argv
 from math import isfinite
 from math import sqrt
 def read_numbers(arr):
+    # 12 13 14 \n
     MAX_VALUE = 10_000
     nums = [] # инициализируем список
     for l in arr: # для каждой строки
         for x in l.split(): # для каждого элемента в строке
+            print(x)
             try: nums.append(float(x.replace(',','.'))) # тз того не требует конечно, но позволяет обработать числа вида 1,2 а не только 1.2
             except ValueError: raise ValueError(f"{x} не является числом")
     if len(nums) == 0: raise ValueError("Полученный список пуст")
@@ -44,8 +47,15 @@ def std_dev(nums): #ско (среднеквадратическое откло�
     return sqrt(variance(nums))
 
 def stats(args):
+    
     if args.input is None: # если нет параметра --input, то читает ввод пользователя
-        nums = read_numbers(stdin)
+        #nums = read_numbers(stdin)
+        array = []
+        while True:
+            s = input()
+            if s == "" and len(array) != 0: nums = read_numbers(array); break
+            elif s == "" and len(array) != 0: raise ValueError("ошибка")
+            array.append(s)
     else: 
         with open(args.input, encoding="utf-8") as f: #читает файлик
             nums = read_numbers(f)
@@ -67,3 +77,7 @@ def stats(args):
         value = function(nums)
         if value is None: print(f"{label}: НЕ СУЩЕСТВУЕТ")
         else: print(f"{label}: {value:{form}}")
+
+
+if __name__ == "__main__":
+    stats(None)
